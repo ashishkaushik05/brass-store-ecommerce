@@ -4,6 +4,7 @@ import { ClerkProvider, useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { Toaster, toast } from 'sonner';
 
+import { config } from '@/lib/config';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { setAuthTokenGetter } from '@/lib/api/client';
 import Header from '@/components/Header';
@@ -19,17 +20,38 @@ import ArticlePage from '@/pages/ArticlePage';
 import ContactPage from '@/pages/ContactPage';
 import PoliciesPage from '@/pages/PoliciesPage';
 
-// Create React Query client
+// Create React Query client with production-grade configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (previously cacheTime)
-      retry: 1,
-      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes - data considered fresh
+      gcTime: 10 * 60 * 1000, // 10 minutes - cache garbage collection
+      retry: (failureCount, error: any) => {
+        // Don't retry on 4xx errors (client errors)
+        if (error?.response?.status >= 400 && error?.response?.status < 500) {
+          return false;
+        }
+        // Retry up to 2 times for network/5xx errors
+        return failureCount < 2;
+      },
+      retryDelay: (attemptIndex) => {
+        // Exponential backoff: 1s, 2s, 4s
+        return Math.min(1000 * 2 ** attemptIndex, 10000);
+      },
+      refetchOnWindowFocus: false, // Don't refetch on tab focus (can be annoying)
+      refetchOnReconnect: true, // Refetch when internet reconnects
+      refetchOnMount: true, // Refetch when component mounts
     },
     mutations: {
-      retry: 1,
+      retry: (failureCount, error: any) => {
+        // Never retry mutations on 4xx errors
+        if (error?.response?.status >= 400 && error?.response?.status < 500) {
+          return false;
+        }
+        // Only retry once for mutations (to avoid duplicate operations)
+        return failureCount < 1;
+      },
+      retryDelay: 1000, // Wait 1 second before retrying mutation
     },
   },
 });
@@ -118,24 +140,9 @@ const AppContent = () => {
 };
 
 function App() {
-  const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-
-  if (!clerkPublishableKey) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Configuration Error</h1>
-          <p className="text-gray-600">
-            Missing VITE_CLERK_PUBLISHABLE_KEY in .env.local
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <ErrorBoundary>
-      <ClerkProvider publishableKey={clerkPublishableKey}>
+      <ClerkProvider publishableKey={config.clerkPublishableKey}>
         <QueryClientProvider client={queryClient}>
           <AppContent />
           <Toaster position="top-right" />

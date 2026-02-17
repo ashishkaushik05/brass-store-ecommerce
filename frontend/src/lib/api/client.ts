@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { toast } from 'sonner';
+import { config } from '@/lib/config';
 
 // Auth token getter - set from App context
 let getAuthToken: (() => Promise<string | null>) | null = null;
@@ -8,10 +9,10 @@ export const setAuthTokenGetter = (getter: () => Promise<string | null>) => {
   getAuthToken = getter;
 };
 
-// Create axios instance
+// Create axios instance with production-grade configuration
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001',
-  timeout: 10000,
+  baseURL: config.apiBaseUrl,
+  timeout: config.apiTimeout,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -42,6 +43,24 @@ apiClient.interceptors.request.use(
 // Track shown errors to prevent spam
 const shownErrors = new Set<string>();
 
+// Error logger - ready for production monitoring integration (Sentry, LogRocket, etc.)
+const logError = (error: AxiosError, context: string) => {
+  // In development, log to console
+  if (import.meta.env.DEV) {
+    console.error(`[API Error] ${context}:`, {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      url: error.config?.url,
+      method: error.config?.method,
+    });
+  }
+  
+  // In production, send to monitoring service
+  // Example: Sentry.captureException(error, { extra: { context } });
+  // Example: LogRocket.captureException(error);
+};
+
 // Response interceptor - Handle errors globally
 apiClient.interceptors.response.use(
   (response) => {
@@ -49,6 +68,9 @@ apiClient.interceptors.response.use(
     return response.data;
   },
   (error: AxiosError<{ message?: string }>) => {
+    // Log error for monitoring
+    logError(error, 'API Request Failed');
+    
     const message = error.response?.data?.message || error.message;
     const status = error.response?.status;
     
