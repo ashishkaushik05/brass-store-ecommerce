@@ -25,12 +25,14 @@ interface FilterState {
   resetFilters: () => void;
 }
 
+const VALID_SORT_VALUES = ['createdAt_desc', 'price_asc', 'price_desc', 'name_asc', 'name_desc'] as const;
+
 const initialState = {
   selectedCategory: '',
   selectedFinish: [],
   selectedUsage: [],
   priceRange: [0, 100000] as [number, number],
-  sortBy: 'featured',
+  sortBy: 'createdAt_desc' as string,
   searchQuery: '',
 };
 
@@ -75,6 +77,16 @@ export const useFilterStore = create<FilterState>()(
     }),
     {
       name: 'pitalya-filters', // localStorage key
+      version: 2, // Bump to invalidate stale persisted data
+      migrate: (persistedState: any, version: number) => {
+        if (version < 2) {
+          // Fix stale sortBy values from old versions
+          if (!VALID_SORT_VALUES.includes(persistedState.sortBy)) {
+            persistedState.sortBy = 'createdAt_desc';
+          }
+        }
+        return persistedState;
+      },
       partialize: (state) => ({
         // Only persist these fields
         selectedCategory: state.selectedCategory,

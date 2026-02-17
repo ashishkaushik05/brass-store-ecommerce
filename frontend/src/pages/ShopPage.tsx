@@ -33,7 +33,6 @@ const ShopPage: React.FC = () => {
     sortBy: sortBy as any,
     page,
     limit,
-    isActive: true,
   });
 
   const products = data?.products || [];
@@ -74,11 +73,11 @@ const ShopPage: React.FC = () => {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="w-full appearance-none bg-white border border-[#e5e2db] text-text-main py-3 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer"
               >
-                <option value="-averageRating">Best Sellers</option>
-                <option value="-createdAt">Newest Arrivals</option>
-                <option value="price">Price: Low to High</option>
-                <option value="-price">Price: High to Low</option>
-                <option value="name">Name: A-Z</option>
+                <option value="createdAt_desc">Newest Arrivals</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="name_asc">Name: A-Z</option>
+                <option value="name_desc">Name: Z-A</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-subtle">
                 <Icon name="expand_more" className="text-sm" />

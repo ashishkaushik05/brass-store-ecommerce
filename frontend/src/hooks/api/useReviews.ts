@@ -22,25 +22,25 @@ export const reviewKeys = {
 
 // Get Reviews for Product
 export const useReviews = (
-  productId: string,
+  productSlug: string,
   filters: ReviewFilters = {},
   options?: Omit<UseQueryOptions<ReviewsResponse>, 'queryKey' | 'queryFn'>
 ) => {
   return useQuery({
-    queryKey: reviewKeys.list({ productId, ...filters }),
+    queryKey: reviewKeys.list({ productId: productSlug, ...filters }),
     queryFn: async (): Promise<ReviewsResponse> => {
       const params = new URLSearchParams();
-      Object.entries({ productId, ...filters }).forEach(([key, value]) => {
+      Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           params.append(key, String(value));
         }
       });
-      const response = await api.get<ReviewsResponse>(
-        `${API_ENDPOINTS.REVIEWS}?${params.toString()}`
-      );
+      const queryString = params.toString();
+      const url = `${API_ENDPOINTS.PRODUCT_REVIEWS(productSlug)}${queryString ? `?${queryString}` : ''}`;
+      const response = await api.get<ReviewsResponse>(url);
       return response;
     },
-    enabled: !!productId,
+    enabled: !!productSlug,
     ...options,
   });
 };
@@ -154,3 +154,6 @@ export const useMarkHelpful = () => {
     },
   });
 };
+
+// Alias for useReviews - more semantic name for product-specific reviews
+export const useProductReviews = useReviews;

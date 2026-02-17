@@ -40,10 +40,10 @@ export const useCollection = (
   return useQuery({
     queryKey: collectionKeys.detail(handle),
     queryFn: async (): Promise<Collection> => {
-      const response = await api.get<Collection>(
+      const response = await api.get<{ collection: Collection }>(
         API_ENDPOINTS.COLLECTION_BY_HANDLE(handle)
       );
-      return response;
+      return (response as any).collection;
     },
     enabled: !!handle,
     ...options,

@@ -49,9 +49,9 @@ export interface ReviewsResponse {
     total: number;
     pages: number;
   };
-  stats?: {
-    averageRating: number;
-    totalReviews: number;
-    ratingDistribution: Record<number, number>;
+  summary?: {
+    average: number;
+    total: number;
+    distribution: Record<string, number>;
   };
 }

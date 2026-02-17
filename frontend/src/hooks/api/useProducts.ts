@@ -71,29 +71,15 @@ export const useProduct = (
   });
 };
 
-// Get Product Reviews
-export const useProductReviews = (productId: string) => {
-  return useQuery({
-    queryKey: productKeys.reviews(productId),
-    queryFn: async () => {
-      const response = await api.get(
-        API_ENDPOINTS.PRODUCT_REVIEWS(productId)
-      );
-      return response;
-    },
-    enabled: !!productId,
-  });
-};
-
 // Get Related Products
 export const useRelatedProducts = (productId: string) => {
   return useQuery<Product[]>({
     queryKey: productKeys.related(productId),
     queryFn: async (): Promise<Product[]> => {
-      const response = await api.get<Product[]>(
+      const response = await api.get<{ products: Product[]; count: number }>(
         API_ENDPOINTS.PRODUCT_RELATED(productId)
       );
-      return response;
+      return (response as any).products;
     },
     enabled: !!productId,
   });

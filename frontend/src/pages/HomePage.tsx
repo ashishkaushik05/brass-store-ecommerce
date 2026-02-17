@@ -9,18 +9,17 @@ import { useProducts } from '@/hooks/api/useProducts';
 import { useCollections } from '@/hooks/api/useCollections';
 
 const HomePage: React.FC = () => {
-  // Fetch best sellers (sorted by rating)
+  // Fetch best sellers (sorted by newest)
   const { data: bestSellersData, isLoading: isLoadingProducts } = useProducts({
-    sortBy: '-averageRating',
+    sortBy: 'createdAt_desc',
     limit: 4,
-    isActive: true,
   });
 
   // Fetch collections
   const { data: collectionsData, isLoading: isLoadingCollections } = useCollections();
 
   const bestSellers = bestSellersData?.products || [];
-  const homeCollections = collectionsData?.slice(0, 4) || [];
+  const homeCollections = collectionsData?.collections?.slice(0, 4) || [];
 
   return (
     <div className="flex flex-col w-full">

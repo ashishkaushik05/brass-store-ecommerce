@@ -64,8 +64,12 @@ const logError = (error: AxiosError, context: string) => {
 // Response interceptor - Handle errors globally
 apiClient.interceptors.response.use(
   (response) => {
-    // Return only data, not full response
-    return response.data;
+    // Unwrap the API envelope: { success, data } -> data
+    const body = response.data;
+    if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
+      return body.data;
+    }
+    return body;
   },
   (error: AxiosError<{ message?: string }>) => {
     // Log error for monitoring

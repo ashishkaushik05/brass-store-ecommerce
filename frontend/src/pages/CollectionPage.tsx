@@ -16,7 +16,6 @@ const CollectionPage: React.FC = () => {
     // Fetch products for this collection
     const { data: productsData, isLoading: isLoadingProducts } = useProducts({
       category: collection?.name,
-      isActive: true,
     }, {
       enabled: !!collection?.name,
     });

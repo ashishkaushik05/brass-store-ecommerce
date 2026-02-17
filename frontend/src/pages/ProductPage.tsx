@@ -44,15 +44,12 @@ const ProductPage: React.FC = () => {
     const { data: product, isLoading, error } = useProduct(slug || '');
     
     // Fetch product reviews
-    const { data: reviewsData } = useProductReviews(product?._id || '', {
-      enabled: !!product?._id,
-    });
+    const { data: reviewsData } = useProductReviews(slug || '');
     
     // Fetch related products (same category)
     const { data: relatedData } = useProducts({
       category: product?.category,
       limit: 4,
-      isActive: true,
     }, {
       enabled: !!product?.category,
     });

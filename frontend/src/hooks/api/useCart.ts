@@ -28,7 +28,7 @@ export const useCart = (
       const response = await api.get<Cart>(API_ENDPOINTS.CART);
       return response;
     },
-    enabled: isAuthenticated,
+    enabled: !!isAuthenticated,
     ...options,
   });
 };
