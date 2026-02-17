@@ -8,6 +8,7 @@ import { api } from '@/lib/api/client';
 import { API_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Order, OrdersResponse, OrderStats } from '@/types/order';
 import { toast } from 'sonner';
+import { useAuth } from './useAuth';
 
 // Query Keys Factory
 export const orderKeys = {
@@ -23,6 +24,8 @@ export const orderKeys = {
 export const useOrders = (
   options?: Omit<UseQueryOptions<OrdersResponse>, 'queryKey' | 'queryFn'>
 ) => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery({
     queryKey: orderKeys.list(),
     queryFn: async (): Promise<OrdersResponse> => {
@@ -31,6 +34,7 @@ export const useOrders = (
       );
       return response;
     },
+    enabled: isAuthenticated,
     ...options,
   });
 };

@@ -6,8 +6,9 @@
 import { useQuery, useMutation, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
 import { API_ENDPOINTS } from '@/lib/api/endpoints';
-import type { Cart, AddToCartData, UpdateCartItemData } from '@/types/cart';
+import type { Cart, CartItem, AddToCartData, UpdateCartItemData } from '@/types/cart';
 import { toast } from 'sonner';
+import { useAuth } from './useAuth';
 
 // Query Keys Factory
 export const cartKeys = {
@@ -19,12 +20,15 @@ export const cartKeys = {
 export const useCart = (
   options?: Omit<UseQueryOptions<Cart>, 'queryKey' | 'queryFn'>
 ) => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery({
     queryKey: cartKeys.detail(),
     queryFn: async (): Promise<Cart> => {
       const response = await api.get<Cart>(API_ENDPOINTS.CART);
       return response;
     },
+    enabled: isAuthenticated,
     ...options,
   });
 };
@@ -41,12 +45,67 @@ export const useAddToCart = () => {
       );
       return response;
     },
+    // Optimistic update
+    onMutate: async (data: AddToCartData) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: cartKeys.detail() });
+      
+      // Snapshot previous value
+      const previousCart = queryClient.getQueryData<Cart>(cartKeys.detail());
+      
+      // Optimistically update cart
+      if (previousCart) {
+        const existingItem = previousCart.items.find(
+          item => item.productId === data.productId
+        );
+        
+        let newItems: CartItem[];
+        if (existingItem) {
+          // Update existing item
+          newItems = previousCart.items.map(item =>
+            item.productId === data.productId
+              ? { ...item, quantity: item.quantity + data.quantity }
+              : item
+          );
+        } else {
+          // Add new item (we don't have full product data, but we can add a placeholder)
+          newItems = [
+            ...previousCart.items,
+            {
+              productId: data.productId,
+              quantity: data.quantity,
+              price: 0, // Will be updated from server
+            },
+          ];
+        }
+        
+        const newTotalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+        const newTotalPrice = newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        queryClient.setQueryData<Cart>(cartKeys.detail(), {
+          ...previousCart,
+          items: newItems,
+          totalItems: newTotalItems,
+          totalPrice: newTotalPrice,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+      
+      return { previousCart };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
       toast.success('Added to cart!');
     },
-    onError: (error: any) => {
+    onError: (error: any, _variables, context) => {
+      // Rollback on error
+      if (context?.previousCart) {
+        queryClient.setQueryData(cartKeys.detail(), context.previousCart);
+      }
       toast.error(error.response?.data?.message || 'Failed to add to cart');
+    },
+    // Always refetch after error or success
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
     },
   });
 };
@@ -63,12 +122,44 @@ export const useUpdateCartItem = () => {
       );
       return response;
     },
+    // Optimistic update
+    onMutate: async ({ itemId, data }) => {
+      await queryClient.cancelQueries({ queryKey: cartKeys.detail() });
+      
+      const previousCart = queryClient.getQueryData<Cart>(cartKeys.detail());
+      
+      if (previousCart) {
+        const newItems = previousCart.items.map(item =>
+          item.productId === data.productId
+            ? { ...item, quantity: data.quantity }
+            : item
+        );
+        
+        const newTotalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+        const newTotalPrice = newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        queryClient.setQueryData<Cart>(cartKeys.detail(), {
+          ...previousCart,
+          items: newItems,
+          totalItems: newTotalItems,
+          totalPrice: newTotalPrice,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+      
+      return { previousCart };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
       toast.success('Cart updated');
     },
-    onError: (error: any) => {
+    onError: (error: any, _variables, context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(cartKeys.detail(), context.previousCart);
+      }
       toast.error(error.response?.data?.message || 'Failed to update cart');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
     },
   });
 };
@@ -84,12 +175,42 @@ export const useRemoveFromCart = () => {
       );
       return response;
     },
+    // Optimistic update
+    onMutate: async (itemId: string) => {
+      await queryClient.cancelQueries({ queryKey: cartKeys.detail() });
+      
+      const previousCart = queryClient.getQueryData<Cart>(cartKeys.detail());
+      
+      if (previousCart) {
+        const newItems = previousCart.items.filter(
+          item => item.productId !== itemId
+        );
+        
+        const newTotalItems = newItems.reduce((sum, item) => sum + item.quantity, 0);
+        const newTotalPrice = newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        queryClient.setQueryData<Cart>(cartKeys.detail(), {
+          ...previousCart,
+          items: newItems,
+          totalItems: newTotalItems,
+          totalPrice: newTotalPrice,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+      
+      return { previousCart };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
       toast.success('Item removed from cart');
     },
-    onError: (error: any) => {
+    onError: (error: any, _variables, context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(cartKeys.detail(), context.previousCart);
+      }
       toast.error(error.response?.data?.message || 'Failed to remove item');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
     },
   });
 };
@@ -103,12 +224,35 @@ export const useClearCart = () => {
       const response = await api.delete(API_ENDPOINTS.CART_CLEAR);
       return response;
     },
+    // Optimistic update
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: cartKeys.detail() });
+      
+      const previousCart = queryClient.getQueryData<Cart>(cartKeys.detail());
+      
+      if (previousCart) {
+        queryClient.setQueryData<Cart>(cartKeys.detail(), {
+          ...previousCart,
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+      
+      return { previousCart };
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
       toast.success('Cart cleared');
     },
-    onError: (error: any) => {
+    onError: (error: any, _variables, context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(cartKeys.detail(), context.previousCart);
+      }
       toast.error(error.response?.data?.message || 'Failed to clear cart');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
     },
   });
 };

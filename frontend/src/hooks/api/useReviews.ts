@@ -8,6 +8,7 @@ import { api } from '@/lib/api/client';
 import { API_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Review, CreateReviewData, UpdateReviewData, ReviewsResponse, ReviewFilters } from '@/types/review';
 import { toast } from 'sonner';
+import { useAuth } from './useAuth';
 
 // Query Keys Factory
 export const reviewKeys = {
@@ -48,6 +49,8 @@ export const useReviews = (
 export const useMyReviews = (
   options?: Omit<UseQueryOptions<ReviewsResponse>, 'queryKey' | 'queryFn'>
 ) => {
+  const { isAuthenticated } = useAuth();
+
   return useQuery({
     queryKey: reviewKeys.my(),
     queryFn: async (): Promise<ReviewsResponse> => {
@@ -56,6 +59,7 @@ export const useMyReviews = (
       );
       return response;
     },
+    enabled: isAuthenticated,
     ...options,
   });
 };

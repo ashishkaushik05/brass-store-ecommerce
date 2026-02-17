@@ -1,6 +1,13 @@
 import axios, { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
+// Auth token getter - set from App context
+let getAuthToken: (() => Promise<string | null>) | null = null;
+
+export const setAuthTokenGetter = (getter: () => Promise<string | null>) => {
+  getAuthToken = getter;
+};
+
 // Create axios instance
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001',
@@ -15,10 +22,12 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     try {
-      // Get token from localStorage (Clerk stores it there)
-      const token = localStorage.getItem('clerk_token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      // Get token from Clerk's secure session
+      if (getAuthToken) {
+        const token = await getAuthToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
       }
     } catch (error) {
       console.error('Error adding auth token:', error);
@@ -30,6 +39,9 @@ apiClient.interceptors.request.use(
   }
 );
 
+// Track shown errors to prevent spam
+const shownErrors = new Set<string>();
+
 // Response interceptor - Handle errors globally
 apiClient.interceptors.response.use(
   (response) => {
@@ -38,34 +50,45 @@ apiClient.interceptors.response.use(
   },
   (error: AxiosError<{ message?: string }>) => {
     const message = error.response?.data?.message || error.message;
-
-    // Handle different error types
-    switch (error.response?.status) {
-      case 400:
-        toast.error(`Invalid request: ${message}`);
-        break;
-      case 401:
-        toast.error('Please sign in to continue');
-        // Don't redirect immediately, let Clerk handle it
-        break;
-      case 403:
-        toast.error('You do not have permission');
-        break;
-      case 404:
-        toast.error('Resource not found');
-        break;
-      case 409:
-        toast.error(`Conflict: ${message}`);
-        break;
-      case 500:
-        toast.error('Server error. Please try again later');
-        break;
-      default:
-        if (error.code === 'ECONNABORTED') {
-          toast.error('Request timeout');
-        } else if (error.code === 'ERR_NETWORK') {
-          toast.error('Network error. Check your connection');
-        }
+    const status = error.response?.status;
+    
+    // Create unique error key to prevent duplicate toasts
+    const errorKey = `${status}-${message.substring(0, 50)}`;
+    
+    // Only show each unique error once per 5 seconds
+    if (!shownErrors.has(errorKey)) {
+      shownErrors.add(errorKey);
+      
+      // Handle different error types
+      switch (status) {
+        case 400:
+          toast.error(`Invalid request: ${message}`);
+          break;
+        case 401:
+          toast.error('Please sign in to continue');
+          break;
+        case 403:
+          toast.error('You do not have permission');
+          break;
+        case 404:
+          toast.error('Resource not found');
+          break;
+        case 409:
+          toast.error(`Conflict: ${message}`);
+          break;
+        case 500:
+          toast.error('Server error. Please try again later');
+          break;
+        default:
+          if (error.code === 'ECONNABORTED') {
+            toast.error('Request timeout');
+          } else if (error.code === 'ERR_NETWORK') {
+            toast.error('Network error. Check your connection');
+          }
+      }
+      
+      // Clear error key after 5 seconds
+      setTimeout(() => shownErrors.delete(errorKey), 5000);
     }
 
     return Promise.reject(error);
