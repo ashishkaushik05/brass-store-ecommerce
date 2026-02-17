@@ -73,3 +73,22 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
+
+// Typed API methods that return just the data
+export const api = {
+  get: <T = any>(url: string, config?: any): Promise<T> => {
+    return apiClient.get(url, config);
+  },
+  post: <T = any>(url: string, data?: any, config?: any): Promise<T> => {
+    return apiClient.post(url, data, config);
+  },
+  patch: <T = any>(url: string, data?: any, config?: any): Promise<T> => {
+    return apiClient.patch(url, data, config);
+  },
+  put: <T = any>(url: string, data?: any, config?: any): Promise<T> => {
+    return apiClient.put(url, data, config);
+  },
+  delete: <T = any>(url: string, config?: any): Promise<T> => {
+    return apiClient.delete(url, config);
+  },
+};

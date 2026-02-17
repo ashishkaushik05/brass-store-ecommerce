@@ -16,6 +16,10 @@ export const API_ENDPOINTS = {
   
   // Cart
   CART: '/api/cart',
+  CART_ADD: '/api/cart/add',
+  CART_UPDATE: (itemId: string) => `/api/cart/${itemId}`,
+  CART_REMOVE: (itemId: string) => `/api/cart/${itemId}`,
+  CART_CLEAR: '/api/cart/clear',
   
   // Orders
   ORDERS: '/api/orders',
@@ -41,7 +45,8 @@ export const API_ENDPOINTS = {
   // Wishlist
   WISHLIST: '/api/wishlist',
   WISHLIST_ADD: '/api/wishlist/add',
-  WISHLIST_REMOVE: '/api/wishlist/remove',
+  WISHLIST_REMOVE: (productId: string) => `/api/wishlist/remove/${productId}`,
+  WISHLIST_CLEAR: '/api/wishlist/clear',
   WISHLIST_TOGGLE: (id: string) => `/api/wishlist/toggle/${id}`,
   
   // Files
