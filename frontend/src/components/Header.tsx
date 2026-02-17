@@ -1,9 +1,20 @@
 
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useUser, SignInButton, SignOutButton } from '@clerk/clerk-react';
 import Icon from './Icon';
+import { useCart } from '@/hooks/api/useCart';
+import { useCartStore } from '@/store/cartStore';
+import { CartDrawer } from './cart/CartDrawer';
 
 const Header: React.FC = () => {
+  const { user } = useUser();
+  const { data: cart } = useCart();
+  const { openDrawer } = useCartStore();
+  const [showUserMenu, setShowUserMenu] = React.useState(false);
+  
+  const cartItemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium transition-colors ${isActive ? 'text-primary' : 'hover:text-primary'}`;
 
@@ -40,16 +51,67 @@ const Header: React.FC = () => {
             <button className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors">
               <Icon name="search" className="text-[20px]" />
             </button>
-            <button className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors relative">
+            <button 
+              onClick={openDrawer}
+              className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors relative"
+            >
               <Icon name="shopping_cart" className="text-[20px]" />
-              <span className="absolute top-1 right-0.5 w-2 h-2 bg-primary rounded-full"></span>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </button>
-            <button className="hidden md:block p-2 hover:bg-[#f4f3f0] rounded-full transition-colors">
-              <Icon name="person" className="text-[20px]" />
-            </button>
+            <div className="hidden md:block relative">
+              {user ? (
+                <div>
+                  <button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors"
+                  >
+                    <Icon name="person" className="text-[20px]" />
+                  </button>
+                  {showUserMenu && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-text-main truncate">
+                          {user.fullName || user.primaryEmailAddress?.emailAddress}
+                        </p>
+                      </div>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-text-subtle hover:bg-[#f4f3f0] transition-colors"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Profile
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="block px-4 py-2 text-sm text-text-subtle hover:bg-[#f4f3f0] transition-colors"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Orders
+                      </Link>
+                      <SignOutButton>
+                        <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-[#f4f3f0] transition-colors">
+                          Sign Out
+                        </button>
+                      </SignOutButton>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <SignInButton mode="modal">
+                  <button className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors">
+                    <Icon name="person" className="text-[20px]" />
+                  </button>
+                </SignInButton>
+              )}
+            </div>
           </div>
         </div>
       </div>
+      <CartDrawer />
     </header>
   );
 };

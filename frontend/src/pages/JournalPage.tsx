@@ -1,16 +1,18 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Section from '../components/Section';
-import Icon from '../components/Icon';
-import { articles } from '../data/mockData';
-import { Article } from '../types';
+import Section from '@/components/Section';
+import Icon from '@/components/Icon';
+import { LoadingSection } from '@/components/ui/LoadingSpinner';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { useArticles } from '@/hooks/api/useArticles';
+import { Article } from '@/types/article';
+import { File } from 'lucide-react';
 
 const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
     <article className="group flex flex-col gap-4 cursor-pointer">
         <Link to={`/journal/${article.slug}`}>
             <div className="overflow-hidden rounded-lg aspect-[4/5] bg-stone-200 relative">
-                <div className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${article.imageUrl})` }}></div>
+                <div className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${article.imageUrl || 'https://picsum.photos/600/750'})` }}></div>
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-bold uppercase tracking-wider text-stone-900">
                     {article.category}
                 </div>
@@ -18,9 +20,9 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
         </Link>
         <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-xs text-stone-500 font-medium uppercase tracking-wide">
-                <span>{article.date}</span>
+                <span>{new Date(article.publishedAt || article.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 <span className="size-1 rounded-full bg-primary"></span>
-                <span>{article.readTime} min read</span>
+                <span>{article.readTime || 5} min read</span>
             </div>
             <Link to={`/journal/${article.slug}`}>
                 <h3 className="text-2xl font-serif font-bold leading-tight text-stone-900 group-hover:text-primary transition-colors">
@@ -39,6 +41,17 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
 
 
 const JournalPage: React.FC = () => {
+    const [page, setPage] = useState(1);
+    const limit = 9;
+    
+    const { data, isLoading } = useArticles({
+      page,
+      limit,
+      status: 'published',
+    });
+    
+    const articles = data?.articles || [];
+    const hasMore = data && page < data.pagination.pages;
     return (
         <Section>
             <div className="text-center max-w-2xl mx-auto mb-16">
@@ -48,18 +61,36 @@ const JournalPage: React.FC = () => {
             </div>
             
             {/* Article Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-                {articles.map(article => (
-                    <ArticleCard key={article.id} article={article} />
-                ))}
-            </div>
+            {isLoading && page === 1 ? (
+              <LoadingSection message="Loading articles..." />
+            ) : articles.length === 0 ? (
+              <EmptyState
+                icon={File}
+                title="No articles yet"
+                description="Check back soon for new stories about our craft and heritage."
+              />
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                    {articles.map(article => (
+                        <ArticleCard key={article._id} article={article} />
+                    ))}
+                </div>
 
-            {/* Load More */}
-            <div className="flex justify-center mt-20">
-                <button className="border border-stone-300 text-stone-900 bg-transparent hover:bg-stone-100 font-medium py-3 px-8 rounded-lg transition-colors">
-                    Load More Articles
-                </button>
-            </div>
+                {/* Load More */}
+                {hasMore && (
+                  <div className="flex justify-center mt-20">
+                      <button
+                        onClick={() => setPage(p => p + 1)}
+                        disabled={isLoading}
+                        className="border border-stone-300 text-stone-900 bg-transparent hover:bg-stone-100 font-medium py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                          {isLoading ? 'Loading...' : 'Load More Articles'}
+                      </button>
+                  </div>
+                )}
+              </>
+            )}
         </Section>
     );
 };

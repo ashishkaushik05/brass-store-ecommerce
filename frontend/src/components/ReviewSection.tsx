@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Review } from '../types';
+import { Review } from '@/types';
 import Icon from './Icon';
 
 interface ReviewSectionProps {
@@ -16,7 +16,9 @@ const ReviewStars: React.FC<{ rating: number }> = ({ rating }) => (
 );
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews }) => {
-  const averageRating = reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length;
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length 
+    : 0;
 
   return (
     <section className="py-16 border-t border-[#e6e2db]">
@@ -25,7 +27,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews }) => {
         <div className="lg:col-span-1 flex flex-col gap-8">
           <h3 className="text-2xl font-bold font-serif text-text-main">Customer Reviews</h3>
           <div className="flex items-center gap-4">
-            <ReviewStars rating={averageRating} />
+            <ReviewStars rating={Math.round(averageRating)} />
             <p className="font-bold">{averageRating.toFixed(1)} out of 5</p>
           </div>
           <p className="text-text-subtle">{reviews.length} customer ratings</p>
@@ -36,30 +38,40 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews }) => {
         
         {/* Right: Reviews List */}
         <div className="lg:col-span-2 flex flex-col gap-8">
-          {reviews.map(review => (
-            <div key={review.id} className="border-b border-[#e6e2db] pb-6">
-              <div className="flex items-center gap-4 mb-2">
-                <div className="w-10 h-10 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center">
-                  {review.author.charAt(0)}
+          {reviews.length === 0 ? (
+            <p className="text-text-subtle text-center py-8">No reviews yet. Be the first to review this product!</p>
+          ) : (
+            reviews.map(review => (
+              <div key={review._id} className="border-b border-[#e6e2db] pb-6">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center">
+                    {review.userName.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-bold">{review.userName}</p>
+                    <p className="text-xs text-text-subtle">
+                      {new Date(review.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-bold">{review.author}</p>
-                  <p className="text-xs text-text-subtle">{review.date}</p>
+                <div className="flex items-center gap-2 my-3">
+                  <ReviewStars rating={review.rating} />
+                  <h4 className="font-bold text-text-main">{review.title}</h4>
                 </div>
+                <p className="text-text-subtle leading-relaxed">{review.content}</p>
+                {review.verified && (
+                  <div className="flex items-center gap-1 mt-3 text-xs text-green-600 font-bold">
+                    <Icon name="verified" className="text-[14px]" />
+                    <span>Verified Purchase</span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center gap-2 my-3">
-                <ReviewStars rating={review.rating} />
-                <h4 className="font-bold text-text-main">{review.title}</h4>
-              </div>
-              <p className="text-text-subtle leading-relaxed">{review.content}</p>
-              {review.verified && (
-                <div className="flex items-center gap-1 mt-3 text-xs text-green-600 font-bold">
-                  <Icon name="verified" className="text-[14px]" />
-                  <span>Verified Purchase</span>
-                </div>
-              )}
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </section>
