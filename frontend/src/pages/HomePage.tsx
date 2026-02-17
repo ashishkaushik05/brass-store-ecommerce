@@ -1,15 +1,26 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Section from '../components/Section';
-import CollectionCard from '../components/CollectionCard';
-import ProductCard from '../components/ProductCard';
-import Icon from '../components/Icon';
-import { collections, products } from '../data/mockData';
+import Section from '@/components/Section';
+import CollectionCard from '@/components/CollectionCard';
+import ProductCard from '@/components/ProductCard';
+import Icon from '@/components/Icon';
+import { LoadingSection } from '@/components/ui/LoadingSpinner';
+import { useProducts } from '@/hooks/api/useProducts';
+import { useCollections } from '@/hooks/api/useCollections';
 
 const HomePage: React.FC = () => {
-  const bestSellers = products.filter(p => p.tag === 'Best Seller').slice(0, 4);
-  const homeCollections = collections.slice(0, 4);
+  // Fetch best sellers (sorted by rating)
+  const { data: bestSellersData, isLoading: isLoadingProducts } = useProducts({
+    sortBy: '-averageRating',
+    limit: 4,
+    isActive: true,
+  });
+
+  // Fetch collections
+  const { data: collectionsData, isLoading: isLoadingCollections } = useCollections();
+
+  const bestSellers = bestSellersData?.products || [];
+  const homeCollections = collectionsData?.slice(0, 4) || [];
 
   return (
     <div className="flex flex-col w-full">
@@ -47,11 +58,15 @@ const HomePage: React.FC = () => {
             <Icon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {homeCollections.map(collection => (
-            <CollectionCard key={collection.id} collection={collection} />
-          ))}
-        </div>
+        {isLoadingCollections ? (
+          <LoadingSection />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {homeCollections.map(collection => (
+              <CollectionCard key={collection._id} collection={collection} />
+            ))}
+          </div>
+        )}
       </Section>
 
       {/* Best Sellers */}
@@ -60,16 +75,22 @@ const HomePage: React.FC = () => {
           <span className="text-primary text-sm font-bold tracking-widest uppercase mb-2 block">Customer Favorites</span>
           <h2 className="text-text-main font-serif text-4xl font-medium">Best Sellers</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {bestSellers.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-        <div className="flex justify-center mt-12">
-          <Link to="/shop" className="flex items-center gap-2 border border-text-main text-text-main px-8 py-3 rounded-lg font-bold text-sm tracking-wide hover:bg-text-main hover:text-white transition-colors">
-            View All Best Sellers
-          </Link>
-        </div>
+        {isLoadingProducts ? (
+          <LoadingSection />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {bestSellers.map(product => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+            <div className="flex justify-center mt-12">
+              <Link to="/shop" className="flex items-center gap-2 border border-text-main text-text-main px-8 py-3 rounded-lg font-bold text-sm tracking-wide hover:bg-text-main hover:text-white transition-colors">
+                View All Best Sellers
+              </Link>
+            </div>
+          </>
+        )}
       </Section>
 
       {/* Craftsmanship story preview */}
