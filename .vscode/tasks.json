@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Admin: dev server",
+			"type": "shell",
+			"command": "cd /home/ashish/Documents/code/pitalya-admin && node_modules/.bin/vite --port 3002",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

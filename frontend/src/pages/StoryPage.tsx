@@ -2,13 +2,19 @@
 import React from 'react';
 import Section from '../components/Section';
 import Icon from '../components/Icon';
+import hero_image from '../assets/static_used/hero_forged_in_fire.jpg';
+import the_beauty_of_imperfection from '../assets/static_used/the_beauty_of_imperfection.jpg';
+import molding from '../assets/static_used/molding.png';
+import the_pour from '../assets/static_used/the_pour.png';
+import hand_finishing from '../assets/static_used/hand_moulding.png';
+
 
 const StoryPage: React.FC = () => {
     return (
         <div className="flex flex-col w-full overflow-x-hidden">
             {/* Hero Section */}
             <section className="relative w-full min-h-[70vh] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://picsum.photos/id/1018/1800/1000')" }}></div>
+                <div className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('${hero_image}')` }}></div>
                 <div className="absolute inset-0 bg-black/40 z-0"></div>
                 <div className="relative z-10 container mx-auto px-6 text-center text-white max-w-4xl">
                     <h1 className="font-serif text-5xl md:text-7xl font-bold leading-tight mb-6 tracking-wide">
@@ -25,7 +31,7 @@ const StoryPage: React.FC = () => {
                 <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
                     <div className="order-2 md:order-1 relative">
                         <div className="relative z-10 overflow-hidden rounded-xl shadow-xl">
-                            <img src="https://picsum.photos/id/234/800/1000" alt="Hammered brass bowl texture" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700 ease-out" />
+                            <img src={the_beauty_of_imperfection} alt="Hammered brass bowl texture" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700 ease-out" />
                         </div>
                         <div className="absolute -bottom-6 -left-6 w-full h-full border-2 border-primary/30 rounded-xl -z-0 hidden md:block"></div>
                     </div>
@@ -42,7 +48,7 @@ const StoryPage: React.FC = () => {
             </Section>
 
             {/* Pull Quote */}
-            <Section className="bg-white border-y border-neutral-100" py="py-24">
+            <Section className="bg-white border-y border-neutral-100 py-24">
                 <div className="max-w-4xl mx-auto text-center">
                     <Icon name="format_quote" className="text-4xl text-primary/50 mb-6"/>
                     <h3 className="font-serif text-3xl md:text-5xl leading-tight text-text-main italic">
@@ -62,9 +68,9 @@ const StoryPage: React.FC = () => {
                 <div className="grid md:grid-cols-3 gap-8">
                     {/* Step 1, 2, 3 */}
                     {[
-                        { title: 'Molding & Casting', img: 'https://picsum.photos/id/312/800/1000', desc: 'The journey begins with a detailed wax model, encased in clay. The wax is melted away, creating a perfect void for molten brass.' },
-                        { title: 'The Pour', img: 'https://picsum.photos/id/15/800/1000', desc: 'Molten brass, heated to over 900°C, is poured into the baked clay molds. This is the moment where liquid fire takes its permanent form.' },
-                        { title: 'Hand Finishing', img: 'https://picsum.photos/id/40/800/1000', desc: 'Once cooled, the clay is broken away. The rough casting is then hand-filed, sanded, and polished to reveal the warm, golden luster.' }
+                        { title: 'Molding & Casting', img: molding, desc: 'The journey begins with a detailed wax model, encased in clay. The wax is melted away, creating a perfect void for molten brass.' },
+                        { title: 'The Pour', img: the_pour, desc: 'Molten brass, heated to over 900°C, is poured into the baked clay molds. This is the moment where liquid fire takes its permanent form.' },
+                        { title: 'Hand Finishing', img: hand_finishing, desc: 'Once cooled, the clay is broken away. The rough casting is then hand-filed, sanded, and polished to reveal the warm, golden luster.' }
                     ].map((step, index) => (
                         <div key={step.title} className={`group flex flex-col gap-6 ${index === 1 ? 'md:mt-16' : ''}`}>
                             <div className="aspect-[4/5] overflow-hidden rounded-lg bg-neutral-200 relative">

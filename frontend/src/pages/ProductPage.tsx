@@ -195,18 +195,23 @@ const ProductPage: React.FC = () => {
                     </div>
                     
                     <div className="py-6">
-                        <AccordionItem title="Material & Finish">
-                            <p><strong>Material:</strong> 100% Pure Brass (Pital)</p>
-                            <p><strong>Finish:</strong> {product.metadata?.finish || 'Polished'}. Each piece is hand-finished, leading to unique variations that are a hallmark of artisanal craftsmanship.</p>
-                        </AccordionItem>
-                        <AccordionItem title="Dimensions & Weight">
-                             <p>{product.metadata?.dimensions || 'Dimensions not available'}</p>
-                             <p>{product.metadata?.weight ? `Weight: ${product.metadata.weight}` : 'Weight not available'}</p>
-                             <p>As each item is handcrafted, please allow for slight variations in size and weight.</p>
-                        </AccordionItem>
-                        <AccordionItem title="Care Instructions">
-                            <p>Gently wipe with a soft, dry cloth. Avoid harsh chemicals and abrasive materials. For a natural polish, use a mixture of lemon juice and baking soda. <Link to="/policies/care" className="text-primary underline">View full care guide</Link>.</p>
-                        </AccordionItem>
+                        {product.metadata?.finish && (
+                          <AccordionItem title="Material & Finish">
+                              <p><strong>Finish:</strong> {product.metadata.finish}. Each piece is hand-finished, leading to unique variations that are a hallmark of artisanal craftsmanship.</p>
+                          </AccordionItem>
+                        )}
+                        {(product.metadata?.dimensions || product.metadata?.weight) && (
+                          <AccordionItem title="Dimensions & Weight">
+                              {product.metadata?.dimensions && <p><strong>Dimensions:</strong> {product.metadata.dimensions}</p>}
+                              {product.metadata?.weight && <p><strong>Weight:</strong> {product.metadata.weight}</p>}
+                              <p>As each item is handcrafted, please allow for slight variations in size and weight.</p>
+                          </AccordionItem>
+                        )}
+                        {product.metadata?.usage && (
+                          <AccordionItem title="Care Instructions">
+                              <p>{product.metadata.usage}</p>
+                          </AccordionItem>
+                        )}
                         <AccordionItem title="Shipping & Returns">
                             <p>Free shipping on all orders across India. Estimated delivery within 5-7 business days. For returns, please refer to our <Link to="/policies/returns" className="text-primary underline">Return Policy</Link>.</p>
                         </AccordionItem>

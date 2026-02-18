@@ -7,7 +7,7 @@ import Icon from '@/components/Icon';
 import { LoadingSection } from '@/components/ui/LoadingSpinner';
 import { useProducts } from '@/hooks/api/useProducts';
 import { useCollections } from '@/hooks/api/useCollections';
-
+import hero_image from '../assets/static_used/hero_forged_in_fire.jpg';
 const HomePage: React.FC = () => {
   // Fetch best sellers (sorted by newest)
   const { data: bestSellersData, isLoading: isLoadingProducts } = useProducts({
@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
     <div className="flex flex-col w-full">
       {/* Hero Section */}
       <section className="relative w-full h-[600px] md:h-[800px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('https://picsum.photos/id/10/1800/1200')" }}></div>
+        <div className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url('${hero_image}')` }}></div>
         <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center gap-6 mt-20">
           <h1 className="text-white font-serif text-5xl md:text-7xl font-bold leading-tight tracking-tight drop-shadow-sm">
@@ -97,7 +97,7 @@ const HomePage: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           <div className="lg:w-1/2 relative group">
             <div className="aspect-[4/5] rounded-lg overflow-hidden relative z-10">
-              <img src="https://picsum.photos/id/20/800/1000" alt="Artisan Workshop" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+              <img src={hero_image} alt="Artisan Workshop" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
             </div>
             <div className="absolute -top-4 -left-4 w-full h-full border-2 border-primary rounded-lg z-0 lg:block hidden"></div>
           </div>
