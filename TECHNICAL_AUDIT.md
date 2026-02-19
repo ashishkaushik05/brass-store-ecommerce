@@ -1,7 +1,7 @@
 # 🔍 Technical Audit Report
-## Pitalya Storefront - Shopify Integration Readiness Assessment
+## Kuber Brass Store Storefront - Shopify Integration Readiness Assessment
 
-**Project:** Pitalya Storefront  
+**Project:** Kuber Brass Store Storefront  
 **Audit Date:** February 17, 2026  
 **Repository:** vercel/commerce (main branch)  
 **Auditor:** GitHub Copilot  
@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-This is a **React/TypeScript storefront** built as a pixel-perfect prototype for Pitalya, a premium handcrafted brass artifact brand. The project is **80-85% complete** from a UI/UX perspective but requires significant backend integration work to connect with the Shopify Storefront API.
+This is a **React/TypeScript storefront** built as a pixel-perfect prototype for Kuber Brass Store, a premium handcrafted brass artifact brand. The project is **80-85% complete** from a UI/UX perspective but requires significant backend integration work to connect with the Shopify Storefront API.
 
 **Key Findings:**
 - ✅ Production-ready UI/UX with excellent visual design
@@ -48,7 +48,7 @@ This is a **React/TypeScript storefront** built as a pixel-perfect prototype for
 
 ### 1.1 What Currently Exists
 
-This project is a **single-page application (SPA)** showcasing handcrafted brass artifacts from the Pitalya brand. It functions as a comprehensive design prototype with full page layouts, navigation, and UI interactions—but without any real data connectivity.
+This project is a **single-page application (SPA)** showcasing handcrafted brass artifacts from the Kuber Brass Store brand. It functions as a comprehensive design prototype with full page layouts, navigation, and UI interactions—but without any real data connectivity.
 
 **Architecture:**
 - **Framework:** React 19.2.4 with TypeScript 5.8.2
@@ -62,7 +62,7 @@ This project is a **single-page application (SPA)** showcasing handcrafted brass
 ### 1.2 Project Structure
 
 ```
-pitalya-storefront/
+kuber-brass-storefront/
 ├── App.tsx                 # Main app component with routing
 ├── index.tsx              # React root entry point
 ├── index.html             # HTML template with CDN imports
@@ -684,7 +684,7 @@ export const useCartStore = create<CartStore>()(
       total: () => get().items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
     }),
     {
-      name: 'pitalya-cart-storage',
+      name: 'kuber-brass-store-cart-storage',
     }
   )
 );
@@ -2383,7 +2383,7 @@ export const useCartStore = create<CartStore>()(
       isOpen: false,
       // ... implementation
     }),
-    { name: 'pitalya-cart' }
+    { name: 'kuber-brass-store-cart' }
   )
 );
 ```
@@ -2654,7 +2654,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 ### 12.1 Final Project Structure
 
 ```
-pitalya-storefront/
+kuber-brass-storefront/
 ├── public/
 │   ├── favicon.ico
 │   └── robots.txt

@@ -7,7 +7,7 @@ const policiesContent: { [key: string]: { title: string; content: React.ReactNod
     title: 'Shipping Policy',
     content: (
       <div>
-        <p>We offer complimentary shipping on all orders across India. As each Pitalya piece is handcrafted with care, please allow 3-5 business days for your order to be processed and dispatched. Once shipped, you can expect delivery within 5-7 business days. You will receive a tracking number via email as soon as your order is on its way.</p>
+        <p>We offer complimentary shipping on all orders across India. As each Kuber Brass Store piece is handcrafted with care, please allow 3-5 business days for your order to be processed and dispatched. Once shipped, you can expect delivery within 5-7 business days. You will receive a tracking number via email as soon as your order is on its way.</p>
       </div>
     )
   },
@@ -15,7 +15,7 @@ const policiesContent: { [key: string]: { title: string; content: React.ReactNod
     title: 'Returns & Refunds',
     content: (
       <div>
-        <p>We take great pride in our craftsmanship. If you are not completely satisfied with your purchase, we accept returns within 14 days of delivery for a full refund or exchange. The item must be in its original, unused condition. Please note that customized items are not eligible for return. To initiate a return, please contact our support team at hello@pitalya.com.</p>
+        <p>We take great pride in our craftsmanship. If you are not completely satisfied with your purchase, we accept returns within 14 days of delivery for a full refund or exchange. The item must be in its original, unused condition. Please note that customized items are not eligible for return. To initiate a return, please contact our support team at hello@kuberbrassstore.com.</p>
       </div>
     )
   },
@@ -37,7 +37,7 @@ const policiesContent: { [key: string]: { title: string; content: React.ReactNod
     title: 'Terms of Service',
     content: (
       <div>
-        <p>Welcome to Pitalya. By accessing or using our website, you agree to be bound by these Terms of Service and our Privacy Policy. All content on this site, including images, text, and designs, is the property of Pitalya and is protected by intellectual property laws. We reserve the right to refuse service or cancel orders at our discretion.</p>
+        <p>Welcome to Kuber Brass Store. By accessing or using our website, you agree to be bound by these Terms of Service and our Privacy Policy. All content on this site, including images, text, and designs, is the property of Kuber Brass Store and is protected by intellectual property laws. We reserve the right to refuse service or cancel orders at our discretion.</p>
       </div>
     )
   },

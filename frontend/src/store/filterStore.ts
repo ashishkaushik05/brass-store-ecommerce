@@ -76,7 +76,7 @@ export const useFilterStore = create<FilterState>()(
       resetFilters: () => set(initialState),
     }),
     {
-      name: 'pitalya-filters', // localStorage key
+      name: 'kuber-brass-store-filters', // localStorage key
       version: 2, // Bump to invalidate stale persisted data
       migrate: (persistedState: any, version: number) => {
         if (version < 2) {

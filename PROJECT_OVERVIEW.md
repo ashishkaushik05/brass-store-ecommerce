@@ -1,6 +1,6 @@
-# Pitalya Storefront - Complete Project Overview
+# Kuber Brass Store Storefront - Complete Project Overview
 
-**Project Name**: Pitalya E-commerce Platform  
+**Project Name**: Kuber Brass Store E-commerce Platform  
 **Purpose**: Online brass artifacts store with custom backend  
 **Tech Stack**: React + TypeScript + Express + MongoDB + Clerk  
 **Date Created**: February 2026  
@@ -24,7 +24,7 @@
 ## Project Structure
 
 ```
-pitalya-storefront/
+kuber-brass-storefront/
 ├── backend/                          # Express API Server
 │   ├── src/
 │   │   ├── config/
@@ -116,7 +116,7 @@ pitalya-storefront/
 ### ✅ Backend - Implemented
 
 **Server**: Running on `http://localhost:3001`  
-**Database**: MongoDB at `mongodb://localhost:27017/pitalya-store`  
+**Database**: MongoDB at `mongodb://localhost:27017/kuber-brass-store-store`  
 **Seeded Data**: 8 brass products
 
 **Working Endpoints** (12 total):
@@ -504,7 +504,7 @@ NODE_ENV=development
 PORT=3001
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/pitalya-store
+MONGODB_URI=mongodb://localhost:27017/kuber-brass-store-store
 
 # Clerk Authentication
 CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -515,7 +515,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-ADMIN_EMAIL=admin@pitalya.com
+ADMIN_EMAIL=admin@kuber-brass-store.com
 
 # Optional
 LOG_LEVEL=info

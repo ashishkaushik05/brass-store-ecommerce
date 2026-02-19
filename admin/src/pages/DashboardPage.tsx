@@ -33,7 +33,7 @@ const DashboardPage: React.FC = () => {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Dashboard</h1>
-      <p style={{ color: '#6b7280', marginBottom: 28 }}>Welcome to Pitalya Admin</p>
+      <p style={{ color: '#6b7280', marginBottom: 28 }}>Welcome to Kuber Brass Store Admin</p>
 
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 32 }}>
         <StatCard label="Total Products" value={productsData?.total ?? '—'} />

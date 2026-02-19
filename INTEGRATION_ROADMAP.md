@@ -1,8 +1,8 @@
 # 🔄 Backend-Frontend Integration Roadmap
-## Pitalya Custom Commerce Integration Plan
+## Kuber Brass Store Custom Commerce Integration Plan
 
 **Date:** February 17, 2026  
-**Project:** Pitalya Storefront + Custom Backend  
+**Project:** Kuber Brass Store Storefront + Custom Backend  
 **Stack:** React + Express + MongoDB + Clerk + PhonePe  
 **Architecture:** Custom Headless Commerce (Non-Shopify)
 
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-This document provides a comprehensive integration plan between the existing Pitalya frontend (React/TypeScript SPA) and the custom Express backend (MongoDB + Clerk + PhonePe).
+This document provides a comprehensive integration plan between the existing Kuber Brass Store frontend (React/TypeScript SPA) and the custom Express backend (MongoDB + Clerk + PhonePe).
 
 **Key Changes from Original Audit:**
 - ❌ **No Shopify Integration** - Custom backend replaces Shopify Storefront API
@@ -1237,7 +1237,7 @@ export const useCartStore = create<CartStore>()(
         items: [...state.items, item]
       })),
     }),
-    { name: 'pitalya-cart' }
+    { name: 'kuber-brass-store-cart' }
   )
 );
 ```
@@ -2820,7 +2820,7 @@ test('complete checkout flow', async ({ page }) => {
 │   Vercel         │      │   Railway        │
 │   (Frontend)     │◄────►│   (Backend)      │
 │                  │      │                  │
-│ pitalya.com      │      │ api.pitalya.com  │
+│ kuber-brass-store.com      │      │ api.kuber-brass-store.com  │
 └──────────────────┘      └────────┬─────────┘
                                    │
                           ┌────────▼─────────┐
@@ -2847,7 +2847,7 @@ External Services:
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "env": {
-    "VITE_API_BASE_URL": "https://api.pitalya.com",
+    "VITE_API_BASE_URL": "https://api.kuber-brass-store.com",
     "VITE_CLERK_PUBLISHABLE_KEY": "@clerk_publishable_key"
   }
 }
@@ -2904,8 +2904,8 @@ PHONEPE_MERCHANT_ID=...
 PHONEPE_MERCHANT_KEY=...
 PHONEPE_API_ENDPOINT=https://api.phonepe.com
 RESEND_API_KEY=...
-FRONTEND_URL=https://pitalya.com
-BACKEND_URL=https://api.pitalya.com
+FRONTEND_URL=https://kuber-brass-store.com
+BACKEND_URL=https://api.kuber-brass-store.com
 ```
 
 ### 13.4 Database (MongoDB Atlas)
@@ -2918,7 +2918,7 @@ BACKEND_URL=https://api.pitalya.com
 
 **Connection String:**
 ```
-mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/pitalya?retryWrites=true&w=majority
+mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/kuber-brass-store?retryWrites=true&w=majority
 ```
 
 ---

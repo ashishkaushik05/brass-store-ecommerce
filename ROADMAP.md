@@ -1,5 +1,5 @@
 # Frontend-Backend Integration Roadmap
-## Pitalya Storefront - Complete Implementation Plan
+## Kuber Brass Store Storefront - Complete Implementation Plan
 
 **Project Start:** February 17, 2026  
 **Estimated Completion:** 3-4 weeks (18-26 hours active work)  
@@ -486,7 +486,7 @@ Zustand stores manage client-side state like UI modals, drawers, and filters. Se
 - State: selectedCategory, selectedFinish[], selectedUsage[], priceRange, sortBy, searchQuery
 - Methods: setCategory(), setFinish(), toggleFinish(), setUsage(), toggleUsage(), setPriceRange(), setSortBy(), setSearchQuery(), resetFilters()
 - Persistence: Uses zustand/persist middleware to save filter state
-- localStorage key: 'pitalya-filters'
+- localStorage key: 'kuber-brass-store-filters'
 
 **File:** `src/store/index.ts` ✅
 - Centralized exports for all stores
@@ -968,7 +968,7 @@ Get the integrated frontend live and accessible to real users. Setup monitoring 
 #### Step 1: Environment Preparation
 ```bash
 # Create production .env
-VITE_API_BASE_URL=https://api.pitalya.com
+VITE_API_BASE_URL=https://api.kuber-brass-store.com
 VITE_CLERK_PUBLISHABLE_KEY=pk_live_...
 VITE_APP_ENV=production
 ```
@@ -1096,7 +1096,7 @@ Then we move to Phase 2, and so on until complete!
 ### Prerequisites Check
 
 Before Phase 1:
-- [ ] Terminal open and in `/home/ashish/Documents/code/pitalya-storefront/frontend`
+- [ ] Terminal open and in `/home/ashish/Documents/code/kuber-brass-storefront/frontend`
 - [ ] Backend running on port 3001 (verify with `curl http://localhost:3001/api/products`)
 - [ ] Node.js 18+ installed
 - [ ] Clerk account with publishable key ready

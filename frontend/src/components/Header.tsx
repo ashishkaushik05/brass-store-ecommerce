@@ -37,7 +37,7 @@ const Header: React.FC = () => {
         <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 group">
           <Icon name="local_fire_department" className="text-primary text-3xl" />
           <span className="font-serif text-2xl font-bold tracking-tight text-text-main group-hover:text-primary transition-colors">
-            Pitalya
+            Kuber Brass Store
           </span>
         </Link>
         

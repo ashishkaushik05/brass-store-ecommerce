@@ -4,7 +4,7 @@
 		{
 			"label": "Admin: dev server",
 			"type": "shell",
-			"command": "cd /home/ashish/Documents/code/pitalya-admin && node_modules/.bin/vite --port 3002",
+			"command": "cd /home/ashish/Documents/code/pitalya-storefront/admin && node_modules/.bin/vite --port 3002",
 			"isBackground": true,
 			"problemMatcher": []
 		}

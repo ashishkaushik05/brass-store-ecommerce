@@ -7,7 +7,7 @@ const CraftPage: React.FC = () => {
     const processSteps = [
         {
             title: 'Design & Inspiration',
-            description: 'Every Pitalya piece begins as a sketch, drawing inspiration from traditional Indian motifs, temple architecture, and the natural world. Our designers blend timeless aesthetics with modern sensibilities.',
+            description: 'Every Kuber Brass Store piece begins as a sketch, drawing inspiration from traditional Indian motifs, temple architecture, and the natural world. Our designers blend timeless aesthetics with modern sensibilities.',
             imageUrl: 'https://picsum.photos/id/119/800/600',
             icon: 'design_services'
         },
@@ -42,7 +42,7 @@ const CraftPage: React.FC = () => {
             <Section>
                 <div className="text-center max-w-3xl mx-auto">
                     <span className="text-primary font-bold tracking-widest uppercase text-xs">Our Craftsmanship</span>
-                    <h1 className="font-serif text-5xl font-bold mt-3 mb-6">The Journey of a Pitalya Piece</h1>
+                    <h1 className="font-serif text-5xl font-bold mt-3 mb-6">The Journey of a Kuber Brass Store Piece</h1>
                     <p className="text-text-subtle text-lg leading-relaxed">From a simple sketch to a timeless heirloom, each artifact undergoes a meticulous journey through the hands of our master artisans. This is a story of patience, precision, and passion.</p>
                 </div>
             </Section>

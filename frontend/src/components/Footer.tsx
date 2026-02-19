@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col gap-6 lg:col-span-2">
             <Link to="/" className="flex items-center gap-2">
               <Icon name="local_fire_department" className="text-primary text-3xl" />
-              <span className="font-serif text-2xl font-bold tracking-tight">Pitalya</span>
+              <span className="font-serif text-2xl font-bold tracking-tight">Kuber Brass Store</span>
             </Link>
             <p className="text-text-subtle text-sm leading-relaxed max-w-xs">
               Handcrafted Brass, Rooted in Tradition. Bringing the warmth of Indian heritage to modern homes worldwide.
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-subtle">
-          <p>© 2024 Pitalya. All rights reserved.</p>
+          <p>© 2024 Kuber Brass Store. All rights reserved.</p>
         </div>
       </div>
     </footer>

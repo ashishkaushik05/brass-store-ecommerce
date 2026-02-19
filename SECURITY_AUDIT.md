@@ -1,6 +1,6 @@
 # 🔍 Security & Code Quality Audit Report
 **Date:** February 17, 2026  
-**Project:** Pitalya Storefront Frontend  
+**Project:** Kuber Brass Store Storefront Frontend  
 **Auditor:** Comprehensive Code Review  
 **Status:** 🔴 CRITICAL ISSUES FOUND
 
@@ -803,12 +803,12 @@ If user has complex filter state, localStorage can exceed 5-10MB limit and throw
 persist(
   (set) => ({ /* ... */ }),
   {
-    name: 'pitalya-filters',
+    name: 'kuber-brass-store-filters',
     onRehydrateStorage: () => (state, error) => {
       if (error) {
         console.error('Failed to load saved filters:', error);
         // Clear corrupted data
-        localStorage.removeItem('pitalya-filters');
+        localStorage.removeItem('kuber-brass-store-filters');
       }
     },
   }

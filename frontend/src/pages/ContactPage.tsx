@@ -46,7 +46,7 @@ const ContactPage: React.FC = () => {
                             {[
                                 { icon: 'location_on', title: 'Visit Us', lines: ['123 Artisan Lane,', 'Brass City, India 302001'] },
                                 { icon: 'call', title: 'Call Us', lines: ['+91 987 654 3210'] },
-                                { icon: 'mail', title: 'Email Us', lines: ['hello@pitalya.com'] },
+                                { icon: 'mail', title: 'Email Us', lines: ['hello@kuberbrassstore.com'] },
                                 { icon: 'schedule', title: 'Business Hours', lines: ['Mon - Sat: 10:00 AM - 7:00 PM', 'Sunday: Closed'] }
                             ].map(item => (
                                 <div key={item.title} className="flex items-start gap-4">

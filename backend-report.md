@@ -1,6 +1,6 @@
 # 🧾 Custom Commerce Backend Architecture Report
 
-## Project: Pitalya Custom Commerce Backend
+## Project: Kuber Brass Store Custom Commerce Backend
 
 **Stack:** Express + TypeScript + MongoDB + Clerk + PhonePe
 **Cart Strategy:** Server-side cart (Mongo-backed)

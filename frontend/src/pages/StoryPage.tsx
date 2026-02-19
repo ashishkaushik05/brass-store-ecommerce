@@ -54,7 +54,7 @@ const StoryPage: React.FC = () => {
                     <h3 className="font-serif text-3xl md:text-5xl leading-tight text-text-main italic">
                         "We do not just make objects; we preserve a legacy of craftsmanship that has survived for centuries."
                     </h3>
-                    <p className="text-sm font-bold uppercase tracking-wider text-text-subtle mt-8">Arjun Pitalya, Founder</p>
+                    <p className="text-sm font-bold uppercase tracking-wider text-text-subtle mt-8">Arjun Kumar, Founder</p>
                 </div>
             </Section>
 

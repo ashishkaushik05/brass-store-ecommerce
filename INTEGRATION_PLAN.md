@@ -1,5 +1,5 @@
 # Frontend-Backend Integration Plan
-## Pitalya Storefront
+## Kuber Brass Store Storefront
 
 **Date:** January 2024  
 **Status:** Planning Phase

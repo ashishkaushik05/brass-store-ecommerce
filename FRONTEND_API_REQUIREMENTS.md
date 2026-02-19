@@ -1,4 +1,4 @@
-# Frontend API Requirements - Pitalya Storefront
+# Frontend API Requirements - Kuber Brass Store Storefront
 
 **Generated**: December 2024  
 **Purpose**: Complete mapping of frontend data requirements to backend API endpoints for integration planning
@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-This document provides a comprehensive analysis of the Pitalya storefront frontend application, detailing all data requirements across 10 pages and 7 components. It maps current mock data usage to required backend API endpoints and identifies gaps in the current backend implementation.
+This document provides a comprehensive analysis of the Kuber Brass Store storefront frontend application, detailing all data requirements across 10 pages and 7 components. It maps current mock data usage to required backend API endpoints and identifies gaps in the current backend implementation.
 
 ### Current State
 - **Frontend**: React 19.2.4 + TypeScript 5.8.2 + Vite 6.2.0
@@ -899,7 +899,7 @@ npm run build
 - `VITE_CLERK_PUBLISHABLE_KEY=pk_test_...`
 
 **Production**:
-- `VITE_API_BASE_URL=https://api.pitalya.com`
+- `VITE_API_BASE_URL=https://api.kuber-brass-store.com`
 - `VITE_CLERK_PUBLISHABLE_KEY=pk_live_...`
 
 ### CORS Configuration
@@ -909,7 +909,7 @@ npm run build
 app.use(cors({
   origin: [
     'http://localhost:5173',      // Dev frontend
-    'https://pitalya.com',         // Production domain
+    'https://kuber-brass-store.com',         // Production domain
   ],
   credentials: true,
 }));

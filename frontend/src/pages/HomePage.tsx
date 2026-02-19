@@ -110,7 +110,7 @@ const HomePage: React.FC = () => {
             </div>
             <div className="flex flex-col gap-4 text-text-main/80 text-lg font-light leading-relaxed">
               <p>
-                Every piece at Pitalya tells a story of patience, precision, and passion. Our artisans, descendants of the original Thathera community, forge metal with rhythmic beats that have echoed through generations.
+                Every piece at Kuber Brass Store tells a story of patience, precision, and passion. Our artisans, descendants of the original Thathera community, forge metal with rhythmic beats that have echoed through generations.
               </p>
             </div>
             <div className="pt-4 flex justify-center lg:justify-start">
@@ -130,7 +130,7 @@ const HomePage: React.FC = () => {
               <h3 className="font-serif text-3xl md:text-4xl leading-snug text-text-main italic">
                   "We embrace the imperfections of the handmade, for in them lies the unique soul of the artifact."
               </h3>
-              <p className="text-sm font-bold uppercase tracking-wider text-text-subtle mt-8">- The Pitalya Family</p>
+              <p className="text-sm font-bold uppercase tracking-wider text-text-subtle mt-8">- The Kuber Brass Store Family</p>
           </div>
       </Section>
 
