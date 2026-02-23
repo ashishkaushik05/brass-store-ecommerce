@@ -12,7 +12,7 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
     <article className="group flex flex-col gap-4 cursor-pointer">
         <Link to={`/journal/${article.slug}`}>
             <div className="overflow-hidden rounded-lg aspect-[4/5] bg-stone-200 relative">
-                <div className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${article.imageUrl || 'https://picsum.photos/600/750'})` }}></div>
+                <div className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${article.featuredImage || 'https://picsum.photos/600/750'})` }}></div>
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-bold uppercase tracking-wider text-stone-900">
                     {article.category}
                 </div>
@@ -22,7 +22,7 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
             <div className="flex items-center gap-2 text-xs text-stone-500 font-medium uppercase tracking-wide">
                 <span>{new Date(article.publishedAt || article.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 <span className="size-1 rounded-full bg-primary"></span>
-                <span>{article.readTime || 5} min read</span>
+                <span>{article.readTime ?? 5} min read</span>
             </div>
             <Link to={`/journal/${article.slug}`}>
                 <h3 className="text-2xl font-serif font-bold leading-tight text-stone-900 group-hover:text-primary transition-colors">

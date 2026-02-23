@@ -445,6 +445,7 @@ const ProductFormPage: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 10 }}>
               {attachmentsData?.attachments?.map((att) => {
                 const isSelected = selectedImages.includes(att.url);
+                const inUse = att.linkedTo?.resourceType != null && !isSelected;
                 return (
                   <div
                     key={att._id}
@@ -456,14 +457,31 @@ const ProductFormPage: React.FC = () => {
                       cursor: isSelected ? 'default' : 'pointer',
                       border: isSelected ? '2px solid #f59e0b' : '2px solid #e5e7eb',
                       borderRadius: 8, overflow: 'hidden', opacity: isSelected ? 0.6 : 1,
+                      position: 'relative',
                     }}
-                    title={isSelected ? 'Already added' : att.originalName}
+                    title={isSelected ? 'Already added to this product' : inUse ? `In use by ${att.linkedTo?.resourceType}` : att.originalName}
                   >
                     <img
                       src={att.url}
                       alt={att.originalName}
                       style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', display: 'block' }}
                     />
+                    {isSelected && (
+                      <div style={{
+                        position: 'absolute', top: 4, left: 4,
+                        background: '#f59e0b', color: '#fff',
+                        fontSize: 9, fontWeight: 700, padding: '2px 5px',
+                        borderRadius: 4, letterSpacing: '0.03em', textTransform: 'uppercase',
+                      }}>Added</div>
+                    )}
+                    {inUse && (
+                      <div style={{
+                        position: 'absolute', top: 4, right: 4,
+                        background: '#6366f1', color: '#fff',
+                        fontSize: 9, fontWeight: 700, padding: '2px 5px',
+                        borderRadius: 4, letterSpacing: '0.03em', textTransform: 'uppercase',
+                      }}>In Use</div>
+                    )}
                     <div style={{ padding: '4px 6px', fontSize: 10, color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {att.originalName}
                     </div>

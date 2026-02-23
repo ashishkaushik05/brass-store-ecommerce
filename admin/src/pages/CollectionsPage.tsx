@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCollections, useCreateCollection, useUpdateCollection, useDeleteCollection } from '@/hooks/useCollections';
 import { useAttachments } from '@/hooks/useAttachments';
 import { useForm } from 'react-hook-form';
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[\s]+/g, '-')
+    .replace(/-+/g, '-');
+}
 
 interface CollectionFormData {
   name: string;
@@ -42,6 +51,15 @@ const CollectionsPage: React.FC = () => {
       },
     });
     const imageUrl = watch('imageUrl');
+    const nameValue = watch('name');
+
+    // Auto-generate handle from name only when handle is empty (new form)
+    useEffect(() => {
+      if (!defaultValues?.handle && nameValue) {
+        setValue('handle', slugify(nameValue));
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nameValue]);
 
     return (
       <form onSubmit={handleSubmit(onSubmit)} style={{ padding: '16px', background: '#f9fafb', borderRadius: 8, marginBottom: 12, border: '1px solid #e5e7eb' }}>
@@ -160,11 +178,31 @@ const CollectionsPage: React.FC = () => {
               <button onClick={() => setShowPicker(false)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer' }}>×</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: 10 }}>
-              {attachmentsData?.attachments?.map((att) => (
-                <div key={att._id} onClick={() => pickerCallback?.(att.url)} style={{ cursor: 'pointer', border: '2px solid #e5e7eb', borderRadius: 6, overflow: 'hidden' }}>
-                  <img src={att.url} alt={att.originalName} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', display: 'block' }} />
-                </div>
-              ))}
+                {attachmentsData?.attachments?.map((att) => {
+                const inUse = att.linkedTo?.resourceType != null;
+                return (
+                  <div
+                    key={att._id}
+                    onClick={() => { pickerCallback?.(att.url); }}
+                    style={{ cursor: 'pointer', border: '2px solid #e5e7eb', borderRadius: 6, overflow: 'hidden', position: 'relative' }}
+                    title={inUse ? `In use by ${att.linkedTo?.resourceType}` : att.originalName}
+                  >
+                    <img src={att.url} alt={att.originalName} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', display: 'block' }} />
+                    {inUse && (
+                      <div style={{
+                        position: 'absolute', top: 4, right: 4,
+                        background: '#f59e0b', color: '#fff',
+                        fontSize: 9, fontWeight: 700, padding: '2px 5px',
+                        borderRadius: 4, letterSpacing: '0.03em',
+                        textTransform: 'uppercase',
+                      }}>In Use</div>
+                    )}
+                    <div style={{ padding: '3px 5px', fontSize: 10, color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {att.originalName}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

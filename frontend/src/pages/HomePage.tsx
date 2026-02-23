@@ -11,7 +11,7 @@ import hero_image from '../assets/static_used/hero_forged_in_fire.jpg';
 const HomePage: React.FC = () => {
   // Fetch best sellers (sorted by newest)
   const { data: bestSellersData, isLoading: isLoadingProducts } = useProducts({
-    sortBy: 'createdAt_desc',
+    sortBy: '-createdAt',
     limit: 4,
   });
 

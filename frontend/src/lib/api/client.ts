@@ -15,6 +15,9 @@ const apiClient = axios.create({
   timeout: config.apiTimeout,
   headers: {
     'Content-Type': 'application/json',
+    // Required when routing through an ngrok tunnel — prevents the ngrok
+    // interstitial browser-warning page from intercepting API responses.
+    'ngrok-skip-browser-warning': 'true',
   },
   withCredentials: true, // Send cookies with requests
 });

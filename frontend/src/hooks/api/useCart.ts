@@ -4,11 +4,13 @@
  */
 
 import { useQuery, useMutation, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
+import { useClerk } from '@clerk/clerk-react';
 import { api } from '@/lib/api/client';
 import { API_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Cart, CartItem, AddToCartData, UpdateCartItemData } from '@/types/cart';
 import { toast } from 'sonner';
 import { useAuth } from './useAuth';
+import { useCartStore } from '@/store/cartStore';
 
 // Query Keys Factory
 export const cartKeys = {
@@ -25,8 +27,33 @@ export const useCart = (
   return useQuery({
     queryKey: cartKeys.detail(),
     queryFn: async (): Promise<Cart> => {
-      const response = await api.get<Cart>(API_ENDPOINTS.CART);
-      return response;
+      const raw = await api.get<any>(API_ENDPOINTS.CART);
+      // Normalize the backend shape to the frontend Cart type:
+      //   backend: { subtotal, itemCount, items[{ name, slug, image, ... }] }
+      //   frontend: { totalPrice, totalItems, items[{ product: { name, slug, images }, ... }] }
+      const items: CartItem[] = (raw?.items ?? []).map((item: any) => ({
+        productId: String(item.productId ?? item._id),
+        price: item.price ?? 0,
+        quantity: item.quantity ?? 1,
+        product: {
+          _id: String(item.productId ?? item._id),
+          name: item.name ?? '',
+          slug: item.slug ?? '',
+          images: item.image ? [item.image] : [],
+          price: item.price ?? 0,
+        } as any,
+      }));
+      const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+      const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
+      return {
+        _id: raw?._id,
+        userId: raw?.userId,
+        sessionId: raw?.sessionId,
+        updatedAt: raw?.updatedAt,
+        items,
+        totalPrice,
+        totalItems,
+      };
     },
     enabled: !!isAuthenticated,
     ...options,
@@ -36,9 +63,17 @@ export const useCart = (
 // Add Item to Cart
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
+  const { openSignIn } = useClerk();
+  const { openDrawer } = useCartStore();
 
   return useMutation({
     mutationFn: async (data: AddToCartData): Promise<Cart> => {
+      // If not signed in, open Clerk sign-in modal and abort the mutation
+      if (!isAuthenticated) {
+        openSignIn();
+        throw new Error('SIGN_IN_REQUIRED');
+      }
       const response = await api.post<Cart>(
         API_ENDPOINTS.CART_ADD,
         data
@@ -95,12 +130,15 @@ export const useAddToCart = () => {
     },
     onSuccess: () => {
       toast.success('Added to cart!');
+      openDrawer(); // show the mini-cart confirmation drawer
     },
     onError: (error: any, _variables, context) => {
       // Rollback on error
       if (context?.previousCart) {
         queryClient.setQueryData(cartKeys.detail(), context.previousCart);
       }
+      // Don't show a toast when we intentionally aborted to show sign-in modal
+      if (error?.message === 'SIGN_IN_REQUIRED') return;
       toast.error(error.response?.data?.message || 'Failed to add to cart');
     },
     // Always refetch after error or success

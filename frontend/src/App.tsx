@@ -21,6 +21,8 @@ import ContactPage from '@/pages/ContactPage';
 import PoliciesPage from '@/pages/PoliciesPage';
 import ProfilePage from '@/pages/ProfilePage';
 import OrdersPage from '@/pages/OrdersPage';
+import CheckoutPage from '@/pages/CheckoutPage';
+import OrderStatusPage from '@/pages/OrderStatusPage';
 
 // Create React Query client with production-grade configuration
 const queryClient = new QueryClient({
@@ -134,6 +136,8 @@ const AppContent = () => {
               <Route path="/policies/:type" element={<PoliciesPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/order/:orderId" element={<OrderStatusPage />} />
             </Routes>
           </main>
           <Footer />

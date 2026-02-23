@@ -1,25 +1,24 @@
 
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useUser, SignInButton, SignOutButton } from '@clerk/clerk-react';
 import Icon from './Icon';
 import { useCart } from '@/hooks/api/useCart';
-import { useCartStore } from '@/store/cartStore';
 import { CartDrawer } from './cart/CartDrawer';
 
 const Header: React.FC = () => {
   const { user } = useUser();
   const { data: cart } = useCart();
-  const { openDrawer } = useCartStore();
+  const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
   
-  const cartItemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const cartItemCount = cart?.totalItems || 0;
   
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium transition-colors ${isActive ? 'text-primary' : 'hover:text-primary'}`;
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#e5e0d8]">
+    <header className="sticky top-0 z-50 bg-white border-b border-[#e5e0d8]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
         {/* Left Nav (Desktop) */}
         <nav className="hidden md:flex items-center gap-8">
@@ -51,17 +50,21 @@ const Header: React.FC = () => {
             <button className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors">
               <Icon name="search" className="text-[20px]" />
             </button>
+
+            {/* Cart → goes straight to checkout */}
             <button 
-              onClick={openDrawer}
+              onClick={() => navigate('/checkout')}
               className="p-2 hover:bg-[#f4f3f0] rounded-full transition-colors relative"
+              aria-label={`Cart${cartItemCount > 0 ? ` (${cartItemCount} items)` : ''}`}
             >
               <Icon name="shopping_cart" className="text-[20px]" />
               {cartItemCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">
-                  {cartItemCount}
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
                 </span>
               )}
             </button>
+
             <div className="hidden md:block relative">
               {user ? (
                 <div>
@@ -111,6 +114,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Cart drawer still mounted for "Added to cart" slide-in feedback */}
       <CartDrawer />
     </header>
   );

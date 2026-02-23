@@ -18,6 +18,7 @@ export interface Article {
   };
   status: 'draft' | 'published';
   publishedAt?: string;
+  readTime?: number;
   createdAt: string;
   updatedAt: string;
 }

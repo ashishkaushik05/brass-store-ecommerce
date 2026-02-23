@@ -58,7 +58,7 @@ const ArticlePage: React.FC = () => {
 
             <div className="aspect-video rounded-xl overflow-hidden mb-12">
                 <img 
-                  src={article.imageUrl || 'https://picsum.photos/1200/675'} 
+                  src={article.featuredImage || 'https://picsum.photos/1200/675'} 
                   alt={article.title} 
                   className="w-full h-full object-cover"
                 />
@@ -76,7 +76,7 @@ const ArticlePage: React.FC = () => {
                     <Link to={`/journal/${other.slug}`} key={other._id} className="group">
                         <div className="overflow-hidden rounded-lg aspect-[4/5] mb-4">
                             <img 
-                              src={other.imageUrl || 'https://picsum.photos/600/750'} 
+                              src={other.featuredImage || 'https://picsum.photos/600/750'} 
                               alt={other.title} 
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />

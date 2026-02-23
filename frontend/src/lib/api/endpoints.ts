@@ -51,4 +51,8 @@ export const API_ENDPOINTS = {
   
   // Files
   FILE_UPLOAD: '/api/files/upload',
+
+  // Payments (PhonePe checkout)
+  CHECKOUT: '/api/payments/checkout',
+  CHECKOUT_ORDER: (orderId: string) => `/api/payments/order/${orderId}`,
 } as const;

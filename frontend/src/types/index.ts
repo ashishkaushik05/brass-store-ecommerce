@@ -42,33 +42,3 @@ export interface Product {
   dimensions?: string;
   weight?: string;
 }
-
-export interface Collection {
-  id: string;
-  handle: string;
-  name: string;
-  description: string;
-  imageUrl: string;
-}
-
-export interface Review {
-    id: string;
-    author: string;
-    rating: number;
-    title: string;
-    content: string;
-    date: string;
-    verified: boolean;
-}
-
-export interface Article {
-    id: string;
-    slug: string;
-    category: string;
-    date: string;
-    readTime: number;
-    title: string;
-    excerpt: string;
-    imageUrl: string;
-    content: string;
-}
