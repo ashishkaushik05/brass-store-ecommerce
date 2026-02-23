@@ -29,6 +29,10 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 
+# ── Markdown docs (keep only README.md) ─────────────────────────────────────
+*.md
+!README.md
+
 # ── Misc ──────────────────────────────────────────────────────────────────────
 *.local
 *.suo
